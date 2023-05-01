@@ -2,6 +2,7 @@ package com.example.manageroom;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void addRoom(int area, int rentPrice, int electricityBill, int waterBill, int areaCode) {
-        
+
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -65,5 +66,16 @@ public class DBHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Successfully", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    Cursor readAllData(){
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME;
+
+        Cursor cursor = null;
+        if(sqLiteDatabase!=null){
+            cursor = sqLiteDatabase.rawQuery(query, null);
+        }
+        return cursor;
     }
 }
