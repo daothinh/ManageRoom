@@ -1,8 +1,10 @@
 package com.example.manageroom;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -33,7 +35,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 COLUMN_RENT_PRICE + " INTEGER, " +
                 COLUMN_ELECTRICITY_BILL + " INTEGER, " +
                 COLUMN_WATER_BILL + " INTEGER," +
-                COLUMN_AREA_CODE + " INTEGER );" ;
+                COLUMN_AREA_CODE + " INTEGER );";
 
         db.execSQL(query);
     }
@@ -43,5 +45,25 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(" DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
+    }
+
+    public void addRoom(int area, int rentPrice, int electricityBill, int waterBill, int areaCode) {
+        
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COLUMN_AREA, area);
+        contentValues.put(COLUMN_RENT_PRICE, rentPrice);
+        contentValues.put(COLUMN_ELECTRICITY_BILL, electricityBill);
+        contentValues.put(COLUMN_WATER_BILL, waterBill);
+        contentValues.put(COLUMN_AREA_CODE, areaCode);
+
+        long result = sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
+
+        if (result == -1) {
+            Toast.makeText(context, "Failded", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully", Toast.LENGTH_SHORT).show();
+        }
     }
 }
