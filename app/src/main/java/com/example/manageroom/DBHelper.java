@@ -78,4 +78,20 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return cursor;
     }
+
+    void updateData(String roomId, String area, String rentPrice, String area_code){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_AREA, Integer.valueOf(area));
+        contentValues.put(COLUMN_RENT_PRICE, Integer.valueOf(rentPrice));
+        contentValues.put(COLUMN_AREA_CODE, Integer.valueOf(area_code));
+
+        long result = db.update(TABLE_NAME, contentValues, "id=?", new String[]{String.valueOf(roomId)});
+        if(result == -1){
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+        } else{
+            Toast.makeText(context, "Successfully", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
