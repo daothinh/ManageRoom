@@ -1,7 +1,10 @@
 package com.example.manageroom;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,9 +16,11 @@ public class UpdateActivity extends AppCompatActivity {
 
     EditText area_update, rent_price_update, area_code_update;
     TextView room_id_update;
-    Button update_btn;
+    Button update_btn, delete_btn;
 
     String id, area, rentPrice, areaCode;
+
+    DBHelper dbHelper = new DBHelper(UpdateActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +33,27 @@ public class UpdateActivity extends AppCompatActivity {
         area_code_update = findViewById(R.id.area_code_update);
 
         update_btn = findViewById(R.id.update_btn);
+        delete_btn = findViewById(R.id.delete_btn);
 
         getAndSetIntentData();
 
+
+        //Set actionbar title
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setTitle(id);
+        }
+
         update_btn.setOnClickListener(v -> {
-            DBHelper dbHelper = new DBHelper(UpdateActivity.this);
-            getDataUpdate();
+            getDataAfterUpdate();
             dbHelper.updateData(id, area, rentPrice, areaCode);
+        });
+
+        delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDialog();
+            }
         });
 
     }
@@ -56,10 +75,32 @@ public class UpdateActivity extends AppCompatActivity {
         }
     }
 
-    private void getDataUpdate(){
+    private void getDataAfterUpdate(){
         id = room_id_update.getText().toString().trim();
         area = area_update.getText().toString().trim();
         rentPrice = rent_price_update.getText().toString().trim();
         areaCode = area_code_update.getText().toString().trim();
+    }
+
+    private void confirmDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Room ID: " + id + " ?");
+        builder.setMessage("Are you sure?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dbHelper.deleteData(id);
+                finish();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.create().show();
     }
 }

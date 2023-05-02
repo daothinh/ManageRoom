@@ -68,18 +68,18 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    Cursor readAllData(){
+    Cursor readAllData() {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;
 
         Cursor cursor = null;
-        if(sqLiteDatabase!=null){
+        if (sqLiteDatabase != null) {
             cursor = sqLiteDatabase.rawQuery(query, null);
         }
         return cursor;
     }
 
-    void updateData(String roomId, String area, String rentPrice, String area_code){
+    void updateData(String roomId, String area, String rentPrice, String area_code) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -88,9 +88,19 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_AREA_CODE, Integer.valueOf(area_code));
 
         long result = db.update(TABLE_NAME, contentValues, "id=?", new String[]{String.valueOf(roomId)});
-        if(result == -1){
+        if (result == -1) {
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
-        } else{
+        } else {
+            Toast.makeText(context, "Successfully", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void deleteData(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long result = db.delete(TABLE_NAME, "id=?", new String[]{id});
+        if (result == -1) {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+        } else {
             Toast.makeText(context, "Successfully", Toast.LENGTH_SHORT).show();
         }
     }
