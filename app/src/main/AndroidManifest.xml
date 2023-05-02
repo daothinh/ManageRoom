@@ -12,10 +12,14 @@
         android:theme="@style/Theme.ManageRoom"
         tools:targetApi="31">
         <activity
-            android:name=".AddActivity"
+            android:name=".UpdateActivity"
             android:parentActivityName=".MainActivity"
-            android:label="Add Room"
             android:exported="false" />
+        <activity
+            android:name=".AddActivity"
+            android:exported="false"
+            android:label="Add Room"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

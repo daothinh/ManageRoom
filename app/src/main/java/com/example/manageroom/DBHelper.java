@@ -2,6 +2,7 @@ package com.example.manageroom;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void addRoom(int area, int rentPrice, int electricityBill, int waterBill, int areaCode) {
-        
+
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -62,6 +63,43 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (result == -1) {
             Toast.makeText(context, "Failded", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    Cursor readAllData() {
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME;
+
+        Cursor cursor = null;
+        if (sqLiteDatabase != null) {
+            cursor = sqLiteDatabase.rawQuery(query, null);
+        }
+        return cursor;
+    }
+
+    void updateData(String roomId, String area, String rentPrice, String area_code) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_AREA, Integer.valueOf(area));
+        contentValues.put(COLUMN_RENT_PRICE, Integer.valueOf(rentPrice));
+        contentValues.put(COLUMN_AREA_CODE, Integer.valueOf(area_code));
+
+        long result = db.update(TABLE_NAME, contentValues, "id=?", new String[]{String.valueOf(roomId)});
+        if (result == -1) {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Successfully", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void deleteData(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long result = db.delete(TABLE_NAME, "id=?", new String[]{id});
+        if (result == -1) {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Successfully", Toast.LENGTH_SHORT).show();
         }
